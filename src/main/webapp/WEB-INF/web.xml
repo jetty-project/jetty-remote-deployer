@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+
+  <display-name>Jetty Remote Deployer WebApp</display-name>
+
+  <listener>org.eclipse.jetty.deploy.remote.InitializationServlet</listener>
+
+  <servlet>
+    <servlet-name>Initialization</servlet-name>
+    <servlet-class>org.eclipse.jetty.deploy.remote.InitializationServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>WarDeployServlet</servlet-name>
+    <servlet-class>org.eclipse.jetty.deploy.remote.WarDeployServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>WarUndeployServlet</servlet-name>
+    <servlet-class>org.eclipse.jetty.deploy.remote.WarUndeployServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>WarDeployServlet</servlet-name>
+    <url-pattern>/deploy</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>WarUndeployServlet</servlet-name>
+    <url-pattern>/undeploy</url-pattern>
+  </servlet-mapping>
+
+  <!--
+    Uncomment in order to activate security
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Jetty Remote Deployer WebApp</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>manager</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Test Realm</realm-name>
+  </login-config>
+   -->
+
+</web-app>
