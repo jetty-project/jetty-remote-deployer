@@ -1,0 +1,33 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>config</id>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>src/main/config</directory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+  </fileSets>
+  <dependencySets>
+    <dependencySet>
+      <includes>
+        <include>org.eclipse.jetty:jetty-remote-deploymentmanager</include>
+      </includes>
+      <scope>provided</scope>
+      <outputDirectory>lib</outputDirectory>
+    </dependencySet>
+    <dependencySet>
+      <useProjectArtifact>true</useProjectArtifact>
+      <!--      <includes>-->
+      <!--        <include>org.eclipse.jetty:jetty-remote-webapp</include>-->
+      <!--      </includes>-->
+      <outputFileNameMapping>remote-control.war</outputFileNameMapping>
+      <outputDirectory>webapps</outputDirectory>
+    </dependencySet>
+  </dependencySets>
+</assembly>

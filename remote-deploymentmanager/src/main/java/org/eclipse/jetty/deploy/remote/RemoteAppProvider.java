@@ -20,6 +20,7 @@ package org.eclipse.jetty.deploy.remote;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.eclipse.jetty.deploy.App;
 import org.eclipse.jetty.deploy.AppProvider;
@@ -36,6 +37,11 @@ public class RemoteAppProvider extends AbstractLifeCycle implements AppProvider
 
     public RemoteAppProvider()
     {
+    }
+
+    public void setWebAppDirectory(String webappDirectoryPath)
+    {
+        this.setWebAppDirectory(Paths.get(webappDirectoryPath));
     }
 
     public void setWebAppDirectory(Path webappDirectory)

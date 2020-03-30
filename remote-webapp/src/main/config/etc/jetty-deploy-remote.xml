@@ -1,0 +1,19 @@
+<?xml version="1.0"?><!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_3.dtd">
+
+<Configure id="DeploymentManager" class="org.eclipse.jetty.deploy.DeploymentManager">
+  <Call name="addAppProvider">
+    <Arg>
+      <New id="remoteAppProvider" class="org.eclipse.jetty.deploy.remote.RemoteAppProvider">
+        <Set name="webAppDirectory">
+          <Property>
+            <Name>jetty.deploy.remote.path</Name>
+            <Default>
+              <Property name="jetty.base" default="." />/
+              <Property name="jetty.deploy.remote.path" default="remote-webapps" />
+            </Default>
+          </Property>
+        </Set>
+      </New>
+    </Arg>
+  </Call>
+</Configure>

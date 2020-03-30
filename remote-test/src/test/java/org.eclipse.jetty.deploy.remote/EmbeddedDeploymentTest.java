@@ -26,6 +26,7 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.util.PathContentProvider;
 import org.eclipse.jetty.deploy.DeploymentManager;
+import org.eclipse.jetty.deploy.remote.RemoteAppProvider;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -76,13 +77,18 @@ public class EmbeddedDeploymentTest
         handlers.addHandler(new DefaultHandler());
         server.setHandler(handlers);
 
-        // Enable DeploymentManager, but without the default AppProvider
+        // Enable DeploymentManager
         DeploymentManager deploymentManager = new DeploymentManager();
         deploymentManager.setContexts(contexts);
         deploymentManager.setContextAttribute(
             "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
             ".*/[^/]*servlet-api-[^/]*\\.jar$|.*/javax.servlet.jsp.jstl-.*\\.jar$|.*/[^/]*taglibs.*\\.jar$");
         server.addBean(deploymentManager);
+
+        // Enable RemoteAppProvider
+        RemoteAppProvider remoteAppProvider = new RemoteAppProvider();
+        remoteAppProvider.setWebAppDirectory(remoteWebApps);
+        deploymentManager.addAppProvider(remoteAppProvider);
 
         // Add Remote Deployer
         WebAppContext remoteDeployerContext = new WebAppContext();

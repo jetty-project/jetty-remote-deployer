@@ -20,7 +20,6 @@
   <modules>
     <module>remote-webapp</module>
     <module>remote-deploymentmanager</module>
-    <module>remote-dist</module>
     <module>jetty-home-tester</module>
     <module>remote-test</module>
   </modules>
