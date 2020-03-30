@@ -90,7 +90,6 @@ public class DeploymentTest
         remoteDeployerContext.setBaseResource(new PathResource(srcMainWebApp));
         Path targetClasses = MavenTestingUtils.getTargetPath("classes");
         remoteDeployerContext.setExtraClasspath(targetClasses.toString());
-        remoteDeployerContext.getServletContext().setAttribute("org.eclipse.jetty.deploy.DeploymentManager", deploymentManager);
         contexts.addHandler(remoteDeployerContext);
 
         server.start();

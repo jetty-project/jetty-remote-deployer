@@ -19,15 +19,18 @@
 package org.eclipse.jetty.deploy.remote;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import org.eclipse.jetty.deploy.AppProvider;
 import org.eclipse.jetty.deploy.DeploymentManager;
-import org.eclipse.jetty.util.component.LifeCycle;
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 
@@ -40,7 +43,9 @@ public class InitializationServlet extends HttpServlet
     {
         ServletContext servletContext = getServletContext();
 
-        DeploymentManager deploymentManager = (DeploymentManager)servletContext.getAttribute("org.eclipse.jetty.deploy.DeploymentManager");
+        Server server = (Server)servletContext.getAttribute("org.eclipse.jetty.server.Server");
+
+        DeploymentManager deploymentManager = server.getBean(DeploymentManager.class);
 
         if (deploymentManager == null)
         {
@@ -77,22 +82,36 @@ public class InitializationServlet extends HttpServlet
             }
         }
 
+        // Stop DeploymentManager, we need to modify it.
+        RemoteAppProvider remoteAppProvider = new RemoteAppProvider(configHome.resolve("remote-webapps"));
         try
         {
-            // Stop DeploymentManager, we need to modify it.
-            LifeCycle.stop(deploymentManager);
-            RemoteAppProvider remoteAppProvider = new RemoteAppProvider(configHome.resolve("remote-webapps"));
+            // Try simple call first
             deploymentManager.addAppProvider(remoteAppProvider);
-
-            servletContext.setAttribute(RemoteAppProvider.class.getName(), remoteAppProvider);
-
-            LOG.debug("Initialized the Remote Jetty deployer via {}", remoteAppProvider);
         }
-        finally
+        catch (IllegalStateException e)
         {
-            // Start DeploymentManager
-            LifeCycle.start(deploymentManager);
+            // The DeploymentManager is running, cannot modify it at runtime
+            try
+            {
+                Field providersField = DeploymentManager.class.getDeclaredField("_providers");
+                providersField.setAccessible(true);
+                //noinspection unchecked
+                List<AppProvider> providers = (List<AppProvider>)providersField.get(deploymentManager);
+                providers.add(remoteAppProvider);
+                providersField.set(deploymentManager, providers);
+                deploymentManager.addBean(remoteAppProvider);
+            }
+            catch (NoSuchFieldException | IllegalAccessException e2)
+            {
+                e2.printStackTrace();
+            }
         }
+
+        servletContext.setAttribute(RemoteAppProvider.class.getName(), remoteAppProvider);
+        servletContext.setAttribute(DeploymentManager.class.getName(), deploymentManager);
+
+        LOG.debug("Initialized the Remote Jetty deployer via {}", remoteAppProvider);
     }
 
     private Path getPathProperty(String key)

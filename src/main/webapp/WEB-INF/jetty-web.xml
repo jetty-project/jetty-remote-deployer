@@ -12,11 +12,11 @@
     </Call>
   </Get>
 
-  <!-- Store a reference to the same ContextHandlerCollection that the DeploymentManager uses -->
+  <!-- Store a reference to the Server for use within InitializationServlet -->
   <Call name="setAttribute">
-    <Arg>org.eclipse.jetty.deploy.DeploymentManager</Arg>
+    <Arg>org.eclipse.jetty.server.Server</Arg>
     <Arg>
-      <Ref id="DeploymentManager" />
+      <Ref id="Server" />
     </Arg>
   </Call>
 </Configure>
