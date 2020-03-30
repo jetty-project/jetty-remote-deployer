@@ -93,9 +93,10 @@ public class EmbeddedDeploymentTest
         // Add Remote Deployer
         WebAppContext remoteDeployerContext = new WebAppContext();
         remoteDeployerContext.setContextPath("/jetty-remote-deployer");
-
         Path srcMainWebApp = Paths.get("../remote-webapp/src/main/webapp").toAbsolutePath();
         remoteDeployerContext.setBaseResource(new PathResource(srcMainWebApp));
+        Path extraClassPath = Paths.get("../remote-webapp/target/classes").toAbsolutePath();
+        remoteDeployerContext.setExtraClasspath(extraClassPath.toString());
         contexts.addHandler(remoteDeployerContext);
 
         server.start();

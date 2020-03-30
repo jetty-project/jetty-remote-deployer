@@ -5,13 +5,7 @@
     <Arg>
       <New id="remoteAppProvider" class="org.eclipse.jetty.deploy.remote.RemoteAppProvider">
         <Set name="webAppDirectory">
-          <Property>
-            <Name>jetty.deploy.remote.path</Name>
-            <Default>
-              <Property name="jetty.base" default="." />/
-              <Property name="jetty.deploy.remote.path" default="remote-webapps" />
-            </Default>
-          </Property>
+          <Property name="jetty.deploy.remote.path" />
         </Set>
       </New>
     </Arg>

@@ -37,15 +37,34 @@ public class RemoteAppProvider extends AbstractLifeCycle implements AppProvider
 
     public RemoteAppProvider()
     {
+        // Setup default webAppDirectory
+
+        Path dir = getPathProperty("jetty.base");
+        if (dir != null)
+        {
+            webAppDirectory = dir.resolve("remote-webapps");
+        }
+        else
+        {
+            webAppDirectory = Paths.get("remote-webapps");
+        }
     }
 
-    public void setWebAppDirectory(String webappDirectoryPath)
+    public void setWebAppDirectory(String path)
     {
-        this.setWebAppDirectory(Paths.get(webappDirectoryPath));
+        if (!StringUtil.isBlank(path))
+        {
+            this.setWebAppDirectory(Paths.get(path));
+        }
     }
 
     public void setWebAppDirectory(Path webappDirectory)
     {
+        if (webappDirectory == null)
+        {
+            return;
+        }
+
         this.webAppDirectory = webappDirectory.toAbsolutePath();
 
         if (!Files.exists(webappDirectory))
@@ -57,6 +76,14 @@ public class RemoteAppProvider extends AbstractLifeCycle implements AppProvider
         {
             throw new IllegalStateException("Not a directory: " + this.webAppDirectory);
         }
+    }
+
+    private Path getPathProperty(String key)
+    {
+        String value = System.getProperty(key);
+        if (value == null)
+            return null;
+        return Paths.get(value);
     }
 
     public RemoteApp createApp(Path warPath, String contextPath)
