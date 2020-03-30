@@ -31,10 +31,14 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 public class RemoteAppProvider extends AbstractLifeCycle implements AppProvider
 {
-    private final Path webAppDirectory;
+    private Path webAppDirectory;
     private DeploymentManager deploymentManager;
 
-    public RemoteAppProvider(Path webappDirectory)
+    public RemoteAppProvider()
+    {
+    }
+
+    public void setWebAppDirectory(Path webappDirectory)
     {
         this.webAppDirectory = webappDirectory.toAbsolutePath();
 

@@ -83,7 +83,8 @@ public class InitializationServlet extends HttpServlet
         }
 
         // Stop DeploymentManager, we need to modify it.
-        RemoteAppProvider remoteAppProvider = new RemoteAppProvider(configHome.resolve("remote-webapps"));
+        RemoteAppProvider remoteAppProvider = new RemoteAppProvider();
+        remoteAppProvider.setWebAppDirectory(configHome.resolve("remote-webapps"));
         try
         {
             // Try simple call first

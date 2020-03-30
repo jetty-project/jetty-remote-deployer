@@ -16,10 +16,11 @@
 //  ========================================================================
 //
 
-package org.eclipse.jetty.deploy.remote;
+package org.eclipse.jetty.tests;
 
 import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
@@ -47,7 +48,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @ExtendWith(WorkDirExtension.class)
-public class DeploymentTest
+public class EmbeddedDeploymentTest
 {
     private Server server;
     private HttpClient client;
@@ -86,10 +87,9 @@ public class DeploymentTest
         // Add Remote Deployer
         WebAppContext remoteDeployerContext = new WebAppContext();
         remoteDeployerContext.setContextPath("/jetty-remote-deployer");
-        Path srcMainWebApp = MavenTestingUtils.getProjectDirPath("src/main/webapp");
+
+        Path srcMainWebApp = Paths.get("../remote-webapp/src/main/webapp").toAbsolutePath();
         remoteDeployerContext.setBaseResource(new PathResource(srcMainWebApp));
-        Path targetClasses = MavenTestingUtils.getTargetPath("classes");
-        remoteDeployerContext.setExtraClasspath(targetClasses.toString());
         contexts.addHandler(remoteDeployerContext);
 
         server.start();
